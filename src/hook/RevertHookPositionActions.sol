@@ -72,6 +72,9 @@ contract RevertHookPositionActions is RevertHookActionBase {
         (Currency currency0, Currency currency1, uint256 amount0, uint256 amount1) =
             _decreaseLiquidity(poolKey, tokenId, false);
         if (amount0 == 0 && amount1 == 0) {
+            if (positionManager.getPositionLiquidity(tokenId) == 0 && debtShares == 0) {
+                _disablePosition(tokenId);
+            }
             emit HookActionFailed(tokenId, Mode.AUTO_EXIT);
             return;
         }
